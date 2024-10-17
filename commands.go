@@ -13,13 +13,13 @@ func getCommands() map[string]CliCommand {
 			name:        "generate",
 			description: "Generates a new password for a given service and username",
 			callback:    commandGeneratePassword,
-			flags:       []string{"-s", "-u", "-l", "-db"},
+			flags:       []string{"-s", "-u", "-l", "-db", "-p"},
 		},
 		"get": {
 			name:        "get",
 			description: "Displays password of given service and username",
 			callback:    commandGetPassword,
-			flags:       []string{"-s", "-u", "-db"},
+			flags:       []string{"-s", "-u", "-db", "-p"},
 		},
 		"help": {
 			name:        "help",
@@ -45,6 +45,10 @@ var flags map[string]map[string]string = map[string]map[string]string{
 	},
 	"-db": {
 		"description": "file path where the password is stored",
+		"required":    "yes",
+	},
+	"-p": {
+		"description": "password for the db",
 		"required":    "yes",
 	},
 }

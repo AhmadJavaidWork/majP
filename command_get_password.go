@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"os"
 )
 
 // Displays password if it exists
@@ -15,6 +17,9 @@ func commandGetPassword(args ...string) error {
 
 	entry, err := getPasswordEntry(&passwordArgs)
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return errors.New("password hash file does not exist")
+		}
 		return err
 	}
 

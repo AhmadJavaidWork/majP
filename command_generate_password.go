@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+
+	"github.com/ahmadjavaidwork/majP/internal/encrypt"
 )
 
 type PasswordArgs struct {
@@ -12,6 +14,7 @@ type PasswordArgs struct {
 	userName    string
 	passLength  int
 	dbPath      string
+	dbPassword  string
 }
 
 // Generates and saves password in the db
@@ -29,7 +32,14 @@ func commandGeneratePassword(args ...string) error {
 
 	passwordEntry, err := getPasswordEntry(&passwordArgs)
 	if err != nil {
-		return err
+		if errors.Is(err, os.ErrNotExist) {
+			err = createDBPasswordHash(&passwordArgs)
+			if err != nil {
+				return err
+			}
+		} else {
+			return err
+		}
 	}
 
 	if passwordEntry != "" {
@@ -68,10 +78,31 @@ func savePassword(passwordArgs *PasswordArgs, password string) error {
 	defer f.Close()
 
 	line := fmt.Sprintf("%s,%s,%s\n", passwordArgs.serviceName, passwordArgs.userName, password)
+	line = encrypt.Encrypt(line, passwordArgs.dbPassword)
+
 	_, err = f.WriteString(line)
 
 	if err != nil {
 		return fmt.Errorf("error saving password: %w", err)
+	}
+	return nil
+}
+
+func createDBPasswordHash(passwordArgs *PasswordArgs) error {
+	f, err := os.OpenFile("pass_hash", os.O_WRONLY|os.O_CREATE, 0644)
+
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	passwordHash, err := hashPassword(passwordArgs.dbPassword)
+	if err != nil {
+		return err
+	}
+	_, err = f.WriteString(passwordHash)
+
+	if err != nil {
+		return fmt.Errorf("error saving password hash: %w", err)
 	}
 	return nil
 }
