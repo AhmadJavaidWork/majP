@@ -7,7 +7,7 @@ import (
 )
 
 // Returns comma separated string of service, username and password if the entry exists
-// else returns empty string
+// otherwise returns empty string
 func getPasswordEntry(passwordArgs *PasswordArgs) (string, error) {
 	f, err := os.OpenFile(passwordArgs.dbPath, os.O_RDONLY|os.O_CREATE, 0644)
 	if err != nil {

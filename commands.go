@@ -13,5 +13,10 @@ func getCommands() map[string]CliCommand {
 			description: "generates a new password for a given service",
 			callback:    generatePassword,
 		},
+		"get": {
+			name:        "get",
+			description: "displays password of given service and username",
+			callback:    getPassword,
+		},
 	}
 }
