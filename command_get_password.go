@@ -1,9 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Displays password if it exists
-func getPassword(args ...string) error {
+func commandGetPassword(args ...string) error {
 	passwordArgs := PasswordArgs{}
 	err := parsePasswordFlags(&passwordArgs, args...)
 

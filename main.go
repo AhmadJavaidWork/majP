@@ -12,17 +12,23 @@ const (
 )
 
 func main() {
-	cmd, err := parseCmd(os.Args)
+	if len(os.Args) < 2 {
+		log.Fatal("Please provide help command for usage")
+	}
+	cmd, err := parseCmd(os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = cmd.callback(os.Args[2:]...)
+	err = cmd.callback(os.Args...)
 	if err != nil {
 		log.Fatal("Error: ", err)
 	}
 }
 
 func parseCmd(args []string) (CliCommand, error) {
+	if args[0] == "help" {
+		return getCommands()["help"], nil
+	}
 	cmdName := ""
 	for i, arg := range args {
 		if arg == "-c" && i+1 < len(args) {

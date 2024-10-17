@@ -15,7 +15,7 @@ type PasswordArgs struct {
 }
 
 // Generates and saves password in the db
-func generatePassword(args ...string) error {
+func commandGeneratePassword(args ...string) error {
 	passwordArgs := PasswordArgs{}
 	err := parsePasswordFlags(&passwordArgs, args...)
 
