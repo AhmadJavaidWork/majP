@@ -25,6 +25,14 @@ func generatePassword(args ...string) error {
 		return err
 	}
 
+	passwordEntry, err := getPasswordEntry(&passwordArgs)
+	if err != nil {
+		return err
+	}
+	if passwordEntry != "" {
+		return errors.New("password already exists")
+	}
+
 	password := generateRandomString(&passwordArgs.passLength)
 
 	w := tabwriter.NewWriter(os.Stdout, 4, 4, 1, ' ', 0)
@@ -86,8 +94,8 @@ func parseGeneratePasswordFlags(passwordArgs *PasswordArgs, args ...string) erro
 
 		if arg == "-l" && i+1 < len(args) {
 			passLength, err = strconv.Atoi(args[i+1])
-			if err != nil || passLength < 8 {
-				return errors.New("please provide a valid password length greater than 7 after -l flag")
+			if err != nil || passLength < 8 || passLength > 20 {
+				return errors.New("please provide a valid password length between 8 and 20")
 			}
 		}
 
