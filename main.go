@@ -6,8 +6,13 @@ import (
 	"os"
 )
 
+const (
+	DefaultPassLen = 8
+	DefaultDBPath  = "data"
+)
+
 func main() {
-	cmd, err := parseArgs(os.Args)
+	cmd, err := parseCmd(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -17,7 +22,7 @@ func main() {
 	}
 }
 
-func parseArgs(args []string) (CliCommand, error) {
+func parseCmd(args []string) (CliCommand, error) {
 	cmdName := ""
 	for i, arg := range args {
 		if arg == "-c" && i+1 < len(args) {
