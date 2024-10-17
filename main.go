@@ -13,7 +13,7 @@ func main() {
 	}
 	err = cmd.callback(os.Args[2:]...)
 	if err != nil {
-		log.Fatal("Error while generating password", err)
+		log.Fatal("Error: ", err)
 	}
 }
 
