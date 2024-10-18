@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 
+	"github.com/ahmadjavaidwork/majP/internal/auth"
 	"github.com/ahmadjavaidwork/majP/internal/encrypt"
 )
 
@@ -95,7 +96,7 @@ func createDBPasswordHash(passwordArgs *PasswordArgs) error {
 		return err
 	}
 	defer f.Close()
-	passwordHash, err := hashPassword(passwordArgs.dbPassword)
+	passwordHash, err := auth.HashPassword(passwordArgs.dbPassword)
 	if err != nil {
 		return err
 	}

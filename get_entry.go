@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ahmadjavaidwork/majP/internal/auth"
 	"github.com/ahmadjavaidwork/majP/internal/encrypt"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // Returns comma separated string of service, username and password if the entry exists
@@ -24,7 +24,7 @@ func getPasswordEntry(passwordArgs *PasswordArgs) (string, error) {
 	defer f.Close()
 	scanner := bufio.NewScanner(f)
 	scanner.Scan()
-	err = checkPasswordHash(scanner.Text(), passwordArgs.dbPassword)
+	err = auth.CheckPasswordHash(scanner.Text(), passwordArgs.dbPassword)
 	if err != nil {
 		return "", errors.New("wrong db password")
 	}
@@ -43,16 +43,4 @@ func getPasswordEntry(passwordArgs *PasswordArgs) (string, error) {
 	}
 
 	return "", nil
-}
-
-func hashPassword(password string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return "", err
-	}
-	return string(hash), nil
-}
-
-func checkPasswordHash(hashedPassword, password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
